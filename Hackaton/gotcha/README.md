@@ -17,7 +17,7 @@ Conecta con propósito.
 ```bash
 cd gotcha
 python3 -m http.server 8000
-# Luego abre: http://localhost:8000
+# Luego abre: http://localhost:8000/Hackaton/gotcha/
 ```
 
 ---
