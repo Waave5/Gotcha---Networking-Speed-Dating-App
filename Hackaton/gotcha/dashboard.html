@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Gotcha</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-gradient-to-br from-yellow-50 to-orange-50 min-h-screen">
+  
+  <!-- Header -->
+  <header class="bg-white shadow-md sticky top-0 z-50">
+    <div class="container mx-auto px-4 py-4 max-w-4xl">
+      <div class="flex items-center justify-between">
+        <!-- Logo -->
+        <h1 class="text-2xl font-bold gotcha-logo">Gotcha</h1>
+        
+        <!-- Level & XP -->
+        <div class="flex items-center space-x-4">
+          <div class="text-right">
+            <div class="flex items-center space-x-2 justify-end">
+              <span class="badge-level" id="levelBadge">Nivel 0</span>
+            </div>
+            <div class="text-sm text-gray-600 mt-1" id="xpText">0 XP</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- XP Progress Bar -->
+      <div class="mt-3">
+        <div class="progress-xp">
+          <div class="progress-xp-fill" id="xpProgress" style="width: 0%"></div>
+        </div>
+        <p class="text-xs text-gray-500 text-right mt-1" id="xpProgressText">0/1000 XP al siguiente nivel</p>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <div class="container mx-auto px-4 py-8 max-w-4xl">
+    
+    <!-- Profile Card -->
+    <div class="card bg-white rounded-2xl shadow-xl p-6 md:p-8 mb-6">
+      <div class="flex items-start space-x-6">
+        <!-- Avatar -->
+        <div class="avatar-large flex-shrink-0" id="userAvatar">👤</div>
+        
+        <!-- Info -->
+        <div class="flex-1">
+          <h2 class="text-3xl font-bold text-gray-900 mb-1" id="userName">Cargando...</h2>
+          <p class="text-lg text-gray-600 mb-4" id="userOccupation">-</p>
+          
+          <!-- Details Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+            
+            <!-- Intereses -->
+            <div>
+              <h3 class="text-sm font-semibold text-gray-700 mb-2 flex items-center">
+                <span class="mr-2">🎯</span> Intereses
+              </h3>
+              <ul class="space-y-1" id="userInterests">
+                <li class="text-sm text-gray-600">-</li>
+              </ul>
+            </div>
+            
+            <!-- Capacidades -->
+            <div>
+              <h3 class="text-sm font-semibold text-gray-700 mb-2 flex items-center">
+                <span class="mr-2">💼</span> Capacidades
+              </h3>
+              <ul class="space-y-1" id="userCapabilities">
+                <li class="text-sm text-gray-600">-</li>
+              </ul>
+            </div>
+            
+            <!-- Gustos -->
+            <div>
+              <h3 class="text-sm font-semibold text-gray-700 mb-2 flex items-center">
+                <span class="mr-2">❤️</span> Gustos
+              </h3>
+              <ul class="space-y-1" id="userHobbies">
+                <li class="text-sm text-gray-600">-</li>
+              </ul>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Event Card -->
+    <div class="card bg-gradient-to-br from-orange-100 to-yellow-100 rounded-2xl shadow-lg p-6 md:p-8 mb-6 border-2 border-yellow-300">
+      <div class="flex items-start space-x-4">
+        <div class="text-4xl">📍</div>
+        <div class="flex-1">
+          <h3 class="text-2xl font-bold text-gray-900 mb-2">Evento Activo</h3>
+          <p class="text-lg font-semibold text-orange-800 mb-2">Tech Meetup Bogotá</p>
+          <p class="text-gray-700 mb-4">
+            Tu grupo ha sido creado usando nuestro algoritmo de matching inteligente. 
+            ¡Prepárate para conocer personas con alta afinidad a tus intereses!
+          </p>
+          
+          <!-- CTA Button -->
+          <button 
+            onclick="viewGroup()" 
+            class="btn-primary w-full md:w-auto"
+          >
+            🤝 Ver mi Grupo Asignado
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Info Card -->
+    <div class="bg-blue-50 rounded-xl p-6 border-2 border-blue-200">
+      <div class="flex items-start space-x-3">
+        <div class="text-2xl">💡</div>
+        <div>
+          <h4 class="font-semibold text-gray-900 mb-1">¿Cómo funciona?</h4>
+          <p class="text-sm text-gray-700">
+            En el evento, tu pantalla mostrará un color único que comparten los miembros de tu grupo. 
+            Cuando los encuentres, confirma la conexión para ganar <strong>+100 XP</strong> por persona.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Back Button -->
+    <div class="mt-6 text-center">
+      <a 
+        href="index.html" 
+        class="text-gray-600 hover:text-gray-900 underline text-sm"
+      >
+        ← Volver al inicio
+      </a>
+    </div>
+
+  </div>
+
+  <!-- App Logic -->
+  <script src="app.js"></script>
+  
+  <!-- Page Logic -->
+  <script>
+    let currentUser = null;
+
+    // Load user data
+    function loadUserData() {
+      // Get user from hash or localStorage
+      const userId = GotchaApp.getUserIdFromHash();
+      currentUser = userId ? GotchaApp.getUserById(userId) : GotchaApp.getCurrentUser();
+      
+      if (!currentUser) {
+        window.location.href = 'index.html';
+        return;
+      }
+
+      // Save to localStorage if loaded from hash
+      if (userId) {
+        GotchaApp.saveCurrentUser(currentUser);
+      }
+
+      // Update UI
+      document.getElementById('userAvatar').textContent = currentUser.photo;
+      document.getElementById('userName').textContent = currentUser.name;
+      document.getElementById('userOccupation').textContent = `${currentUser.occupation} • ${currentUser.age} años`;
+      
+      // Interests
+      const interestsList = document.getElementById('userInterests');
+      interestsList.innerHTML = currentUser.interests.map(i => 
+        `<li class="text-sm text-gray-600">• ${i}</li>`
+      ).join('');
+      
+      // Capabilities
+      const capabilitiesList = document.getElementById('userCapabilities');
+      capabilitiesList.innerHTML = currentUser.capabilities.map(c => 
+        `<li class="text-sm text-gray-600">• ${c}</li>`
+      ).join('');
+      
+      // Hobbies
+      const hobbiesList = document.getElementById('userHobbies');
+      hobbiesList.innerHTML = currentUser.hobbies.map(h => 
+        `<li class="text-sm text-gray-600">• ${h}</li>`
+      ).join('');
+
+      // XP & Level
+      updateXPDisplay();
+    }
+
+    // Update XP display
+    function updateXPDisplay() {
+      const progress = GotchaApp.getXPProgress(currentUser.xp);
+      
+      document.getElementById('levelBadge').textContent = `Nivel ${progress.currentLevel}`;
+      document.getElementById('xpText').textContent = `${GotchaApp.formatNumber(currentUser.xp)} XP`;
+      document.getElementById('xpProgress').style.width = `${progress.percentage}%`;
+      document.getElementById('xpProgressText').textContent = 
+        `${progress.xpInCurrentLevel}/${progress.xpNeeded} XP al siguiente nivel`;
+    }
+
+    // Navigate to group view
+    function viewGroup() {
+      GotchaApp.navigateTo('group', currentUser.id);
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      loadUserData();
+    });
+  </script>
+
+</body>
+</html>
+

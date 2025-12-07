@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi Grupo - Gotcha</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="overflow-x-hidden">
+  
+  <!-- Group Screen (Fullscreen) -->
+  <div id="groupScreen" class="group-screen min-h-screen flex flex-col items-center justify-center px-4 py-8 relative transition-all duration-300">
+    
+    <!-- Back Button -->
+    <a 
+      href="dashboard.html" 
+      id="backButton"
+      class="absolute top-4 left-4 bg-white bg-opacity-30 hover:bg-opacity-50 backdrop-blur-sm text-white px-4 py-2 rounded-lg font-semibold transition-all flex items-center space-x-2 focus:outline-none focus:ring-2 focus:ring-white"
+    >
+      <span>←</span>
+      <span>Volver</span>
+    </a>
+
+    <!-- Group Color Badge -->
+    <div class="absolute top-4 right-4 bg-white bg-opacity-30 backdrop-blur-sm px-4 py-2 rounded-full font-semibold" id="colorBadge">
+      <span id="colorName">Grupo</span>
+    </div>
+
+    <!-- Main Content -->
+    <div class="text-center space-y-6 max-w-md">
+      
+      <!-- Avatar Large -->
+      <div class="avatar-large-group mx-auto" id="currentUserAvatar">
+        👤
+      </div>
+
+      <!-- User Name -->
+      <h1 class="text-4xl md:text-5xl font-bold" id="currentUserName" style="text-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+        Cargando...
+      </h1>
+
+      <!-- Subtitle -->
+      <p class="text-lg md:text-xl font-medium opacity-90" id="currentUserOccupation">
+        -
+      </p>
+
+      <!-- Group Members Collapsible -->
+      <div class="mt-8">
+        <button 
+          onclick="toggleMembers()" 
+          id="toggleButton"
+          class="bg-white bg-opacity-30 hover:bg-opacity-50 backdrop-blur-sm px-6 py-3 rounded-xl font-semibold transition-all flex items-center space-x-2 mx-auto focus:outline-none focus:ring-2 focus:ring-white"
+        >
+          <span id="toggleIcon">▼</span>
+          <span id="toggleText">Ver miembros del grupo</span>
+        </button>
+
+        <!-- Members List (Hidden by default) -->
+        <div id="membersList" class="mt-6 space-y-3 hidden">
+          <!-- Members will be injected here -->
+        </div>
+      </div>
+
+      <!-- Connection Button -->
+      <div class="mt-12 space-y-3">
+        <button 
+          onclick="confirmConnection()" 
+          class="btn-connection bg-white hover:bg-opacity-95 transition-all px-8 py-4 rounded-2xl font-bold text-lg shadow-2xl transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-white focus:ring-opacity-50 w-full"
+        >
+          🤝 Confirmar Conexión Exitosa
+        </button>
+        
+        <!-- Debug Test Button (remove after testing) -->
+        <button 
+          onclick="testModal()" 
+          class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-semibold opacity-75 hover:opacity-100 transition-all w-full"
+        >
+          🧪 TEST: Abrir Modal Directamente
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Modal Overlay (Hidden by default) -->
+  <div id="modalOverlay" class="modal-overlay">
+    <div class="modal-content" id="modalContent">
+      
+      <!-- Success Icon -->
+      <div class="text-center mb-6">
+        <div class="text-6xl mb-4">🎉</div>
+        <h2 class="text-3xl font-bold text-gray-900 mb-2">¡Conexión Exitosa!</h2>
+        <p class="text-gray-600">Has conectado con tu grupo de networking</p>
+      </div>
+
+      <!-- XP Gain -->
+      <div class="bg-gradient-to-r from-yellow-100 to-orange-100 rounded-xl p-6 mb-4 text-center border-2 border-yellow-300">
+        <p class="text-sm font-semibold text-gray-700 mb-2">🌟 Experiencia Ganada</p>
+        <p class="text-5xl font-bold text-orange-600 mb-2" id="xpGained">+100 XP</p>
+        <p class="text-xs text-gray-600">Por confirmar conexión con tu grupo</p>
+      </div>
+
+      <!-- Level Up (Conditional) -->
+      <div id="levelUpSection" class="hidden bg-gradient-to-r from-purple-100 to-pink-100 rounded-xl p-6 mb-4 text-center border-2 border-purple-300">
+        <p class="text-2xl font-bold text-purple-700 mb-2">🎊 ¡Subiste de Nivel!</p>
+        <p class="text-lg text-gray-700 mb-3">
+          Nivel <span id="oldLevel">0</span> → <span id="newLevel" class="text-2xl font-bold text-purple-600">0</span>
+        </p>
+        <div class="bg-white bg-opacity-60 rounded-lg p-3 text-sm">
+          <p class="font-semibold text-purple-800 mb-1">🎁 Beneficios Desbloqueados:</p>
+          <ul class="text-left text-gray-700 space-y-1">
+            <li>• Prioridad en futuros matches</li>
+            <li>• Acceso a eventos exclusivos</li>
+            <li>• Badge especial en tu perfil</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Benefits & Rewards Section -->
+      <div class="bg-gradient-to-r from-green-100 to-emerald-100 rounded-xl p-5 mb-6 border-2 border-green-300">
+        <h3 class="font-bold text-green-800 text-center mb-3 flex items-center justify-center">
+          <span class="text-xl mr-2">🎁</span>
+          Beneficios de Esta Conexión
+        </h3>
+        <div class="space-y-2 text-sm">
+          <div class="benefit-item flex items-start space-x-2 bg-white bg-opacity-60 rounded-lg p-2">
+            <span class="text-lg flex-shrink-0">🍺</span>
+            <div class="flex-1">
+              <p class="font-semibold text-gray-800">Cerveza Gratis</p>
+              <p class="text-xs text-gray-600">Canjeable en el evento (patrocinado)</p>
+            </div>
+          </div>
+          <div class="benefit-item flex items-start space-x-2 bg-white bg-opacity-60 rounded-lg p-2">
+            <span class="text-lg flex-shrink-0">💬</span>
+            <div class="flex-1">
+              <p class="font-semibold text-gray-800">Chat Desbloqueado</p>
+              <p class="text-xs text-gray-600">Chatea con tu grupo post-evento</p>
+            </div>
+          </div>
+          <div class="benefit-item flex items-start space-x-2 bg-white bg-opacity-60 rounded-lg p-2">
+            <span class="text-lg flex-shrink-0">⭐</span>
+            <div class="flex-1">
+              <p class="font-semibold text-gray-800">Puntos de Reputación</p>
+              <p class="text-xs text-gray-600">Tu perfil sube en el ranking de la comunidad</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- New Stats -->
+      <div class="text-center mb-6 bg-gray-50 rounded-xl p-4">
+        <p class="text-sm text-gray-600 mb-1">Tu progreso actual:</p>
+        <p class="text-3xl font-bold text-gray-900" id="totalXP">0 XP</p>
+        <div class="flex items-center justify-center space-x-2 mt-2">
+          <span class="badge-level" id="modalLevelBadge">Nivel 0</span>
+          <span class="text-xs text-gray-500" id="nextLevelText">• 0 XP hasta el próximo nivel</span>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex flex-col sm:flex-row gap-3">
+        <button 
+          onclick="goToDashboard()" 
+          class="btn-primary flex-1"
+        >
+          📊 Ver Mi Perfil
+        </button>
+        <button 
+          onclick="closeModal()" 
+          class="btn-secondary flex-1"
+        >
+          🤝 Seguir Conectando
+        </button>
+      </div>
+
+      <!-- Quick Tip -->
+      <div class="mt-4 text-center">
+        <p class="text-xs text-gray-500">
+          💡 <span class="font-semibold">Tip:</span> Conecta con más grupos para desbloquear recompensas premium
+        </p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- App Logic -->
+  <script src="app.js"></script>
+  
+  <!-- Page Logic -->
+  <script>
+    let currentUser = null;
+    let groupMembers = [];
+    let groupColor = null;
+    let membersVisible = false;
+
+    // Load group data
+    function loadGroupData() {
+      // Get user from hash or localStorage
+      const userId = GotchaApp.getUserIdFromHash();
+      currentUser = userId ? GotchaApp.getUserById(userId) : GotchaApp.getCurrentUser();
+      
+      if (!currentUser) {
+        window.location.href = 'index.html';
+        return;
+      }
+
+      // Create group using matching algorithm
+      groupMembers = GotchaApp.createGroup(currentUser, GotchaApp.users);
+      groupColor = GotchaApp.getGroupColor(groupMembers);
+
+      // Apply group color to screen
+      applyGroupColor();
+
+      // Update UI
+      renderCurrentUser();
+      renderMembers();
+    }
+
+    // Apply group color theme
+    function applyGroupColor() {
+      const screen = document.getElementById('groupScreen');
+      screen.style.background = `linear-gradient(135deg, ${groupColor.bg} 0%, ${adjustBrightness(groupColor.bg, 20)} 100%)`;
+      screen.style.color = groupColor.textColor;
+      
+      // Update color badge
+      document.getElementById('colorName').textContent = `Grupo ${groupColor.name}`;
+      document.getElementById('colorName').style.color = groupColor.textColor;
+      
+      // Update back button color
+      document.getElementById('backButton').style.color = groupColor.textColor;
+      
+      // Update connection button color based on background
+      const connectionBtn = document.querySelector('.btn-connection');
+      connectionBtn.style.color = groupColor.bg;
+    }
+
+    // Adjust brightness of hex color
+    function adjustBrightness(hex, percent) {
+      const num = parseInt(hex.replace('#', ''), 16);
+      const amt = Math.round(2.55 * percent);
+      const R = (num >> 16) + amt;
+      const G = (num >> 8 & 0x00FF) + amt;
+      const B = (num & 0x0000FF) + amt;
+      return '#' + (0x1000000 + (R < 255 ? R < 1 ? 0 : R : 255) * 0x10000 +
+        (G < 255 ? G < 1 ? 0 : G : 255) * 0x100 +
+        (B < 255 ? B < 1 ? 0 : B : 255))
+        .toString(16).slice(1);
+    }
+
+    // Render current user info
+    function renderCurrentUser() {
+      document.getElementById('currentUserAvatar').textContent = currentUser.photo;
+      document.getElementById('currentUserName').textContent = currentUser.name;
+      document.getElementById('currentUserOccupation').textContent = currentUser.occupation;
+    }
+
+    // Render group members
+    function renderMembers() {
+      const container = document.getElementById('membersList');
+      const otherMembers = groupMembers.filter(m => m.id !== currentUser.id);
+      
+      container.innerHTML = otherMembers.map(member => {
+        const affinity = GotchaApp.calculateAffinity(currentUser, member);
+        return `
+          <div class="bg-white bg-opacity-30 backdrop-blur-sm rounded-xl p-4 flex items-center space-x-4">
+            <div class="text-3xl">${member.photo}</div>
+            <div class="flex-1 text-left">
+              <h4 class="font-bold text-lg" style="color: ${groupColor.textColor}">${member.name}</h4>
+              <p class="text-sm opacity-90">${member.occupation}</p>
+              <div class="mt-1">
+                <span class="text-xs bg-white bg-opacity-50 px-2 py-1 rounded-full font-semibold">
+                  ${affinity}% afinidad
+                </span>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Toggle members visibility
+    function toggleMembers() {
+      membersVisible = !membersVisible;
+      const list = document.getElementById('membersList');
+      const icon = document.getElementById('toggleIcon');
+      const text = document.getElementById('toggleText');
+      
+      if (membersVisible) {
+        list.classList.remove('hidden');
+        icon.textContent = '▲';
+        text.textContent = 'Ocultar miembros';
+      } else {
+        list.classList.add('hidden');
+        icon.textContent = '▼';
+        text.textContent = 'Ver miembros del grupo';
+      }
+    }
+
+    // Confirm connection and show modal
+    function confirmConnection() {
+      console.log('🤝 Confirming connection...');
+      console.log('👤 Current user before XP:', currentUser);
+      
+      try {
+        // Check if GotchaApp is available
+        if (typeof GotchaApp === 'undefined') {
+          console.error('❌ GotchaApp is not defined!');
+          alert('Error: app.js not loaded properly');
+          return;
+        }
+        
+        // Add XP (100 XP per connection)
+        const result = GotchaApp.addXP(100);
+        console.log('✅ XP added:', result);
+        
+        // Check if result is valid
+        if (!result) {
+          console.error('❌ addXP returned null - user not in localStorage');
+          alert('Error: User data not found. Try going back to dashboard first.');
+          return;
+        }
+        
+        // Update current user from storage
+        currentUser = GotchaApp.getCurrentUser();
+        console.log('👤 Current user updated:', currentUser);
+        
+        // Trigger confetti (check if library is loaded)
+        if (typeof confetti !== 'undefined') {
+          confetti({
+            particleCount: 100,
+            spread: 70,
+            origin: { y: 0.6 }
+          });
+          console.log('🎉 Confetti triggered');
+        } else {
+          console.warn('⚠️ Confetti library not loaded');
+        }
+
+        // Show modal
+        console.log('📊 Showing success modal...');
+        showModal(result);
+      } catch (error) {
+        console.error('❌ Error in confirmConnection:', error);
+        alert('Error: ' + error.message);
+      }
+    }
+
+    // Show success modal
+    function showModal(result) {
+      try {
+        console.log('🔍 showModal called with result:', result);
+        
+        const overlay = document.getElementById('modalOverlay');
+        if (!overlay) {
+          console.error('❌ Modal overlay element not found!');
+          return;
+        }
+        console.log('✅ Modal overlay found');
+        
+        // Calculate progress to next level
+        const progress = GotchaApp.getXPProgress(result.xp);
+        const xpToNextLevel = progress.xpNeeded - progress.xpInCurrentLevel;
+        console.log('📊 Progress calculated:', progress);
+        
+        // Update modal content
+        document.getElementById('xpGained').textContent = '+100 XP';
+        document.getElementById('totalXP').textContent = `${GotchaApp.formatNumber(result.xp)} XP`;
+        document.getElementById('modalLevelBadge').textContent = `Nivel ${result.newLevel}`;
+        document.getElementById('nextLevelText').textContent = `• ${xpToNextLevel} XP hasta el próximo nivel`;
+        console.log('✅ Modal content updated');
+        
+        // Show level up if applicable
+        if (result.leveledUp) {
+          console.log('🎊 Level up detected!');
+          const levelUpSection = document.getElementById('levelUpSection');
+          levelUpSection.classList.remove('hidden');
+          document.getElementById('oldLevel').textContent = result.oldLevel;
+          document.getElementById('newLevel').textContent = result.newLevel;
+          
+          // Extra confetti for level up
+          if (typeof confetti !== 'undefined') {
+            setTimeout(() => {
+              confetti({
+                particleCount: 150,
+                spread: 100,
+                origin: { y: 0.5 }
+              });
+            }, 300);
+            
+            setTimeout(() => {
+              confetti({
+                particleCount: 100,
+                angle: 60,
+                spread: 55,
+                origin: { x: 0 }
+              });
+            }, 500);
+            
+            setTimeout(() => {
+              confetti({
+                particleCount: 100,
+                angle: 120,
+                spread: 55,
+                origin: { x: 1 }
+              });
+            }, 700);
+          }
+        } else {
+          // Hide level up section if no level up
+          const levelUpSection = document.getElementById('levelUpSection');
+          if (levelUpSection) {
+            levelUpSection.classList.add('hidden');
+          }
+        }
+        
+        // Show overlay
+        console.log('👁️ Adding "show" class to overlay...');
+        overlay.classList.add('show');
+        console.log('✅ Modal should now be visible!');
+        console.log('📋 Overlay classes:', overlay.className);
+        console.log('🎨 Overlay style:', {
+          opacity: getComputedStyle(overlay).opacity,
+          pointerEvents: getComputedStyle(overlay).pointerEvents,
+          display: getComputedStyle(overlay).display
+        });
+      } catch (error) {
+        console.error('❌ Error in showModal:', error);
+        alert('Modal error: ' + error.message);
+      }
+    }
+
+    // Close modal
+    function closeModal() {
+      const overlay = document.getElementById('modalOverlay');
+      overlay.classList.remove('show');
+    }
+
+    // Go to dashboard
+    function goToDashboard() {
+      GotchaApp.navigateTo('dashboard', currentUser.id);
+    }
+
+    // Test modal function (for debugging)
+    function testModal() {
+      console.log('🧪 TEST: Manually opening modal...');
+      const testResult = {
+        xp: 1600,
+        newLevel: 3,
+        oldLevel: 3,
+        leveledUp: false
+      };
+      showModal(testResult);
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      loadGroupData();
+    });
+
+    // Close modal on overlay click
+    document.getElementById('modalOverlay').addEventListener('click', (e) => {
+      if (e.target.id === 'modalOverlay') {
+        closeModal();
+      }
+    });
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const overlay = document.getElementById('modalOverlay');
+        if (overlay.classList.contains('show')) {
+          closeModal();
+        }
+      }
+    });
+  </script>
+
+</body>
+</html>
+

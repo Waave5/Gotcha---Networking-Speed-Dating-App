@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gotcha - Networking Gamificado</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-gradient-to-br from-yellow-50 to-orange-50 min-h-screen">
+  
+  <!-- Container -->
+  <div class="container mx-auto px-4 py-8 max-w-2xl">
+    
+    <!-- Logo & Header -->
+    <div class="text-center mb-12 mt-8">
+      <h1 class="text-5xl md:text-6xl font-bold mb-4 gotcha-logo">
+        Gotcha
+      </h1>
+      <p class="text-xl text-gray-700 font-medium">Conecta con propósito</p>
+      <p class="text-gray-600 mt-2">Tu red, gamificada</p>
+    </div>
+
+    <!-- Main Card -->
+    <div class="card bg-white rounded-2xl shadow-xl p-8 md:p-10 mb-6">
+      
+      <!-- Concept Explanation -->
+      <div class="mb-8">
+        <h2 class="text-2xl font-bold text-gray-900 mb-4">¿Qué es Gotcha?</h2>
+        <p class="text-gray-700 leading-relaxed mb-4">
+          Networking inteligente para eventos. Nuestro algoritmo te empareja con personas de 
+          <span class="font-semibold text-orange-600">máxima afinidad</span> basándose en tus 
+          objetivos, habilidades y gustos.
+        </p>
+        <div class="flex items-start space-x-3 text-gray-600 mb-2">
+          <span class="text-2xl">🎯</span>
+          <p>Matching pre-evento con algoritmo inteligente</p>
+        </div>
+        <div class="flex items-start space-x-3 text-gray-600 mb-2">
+          <span class="text-2xl">🎨</span>
+          <p>Identificación visual por color en el evento</p>
+        </div>
+        <div class="flex items-start space-x-3 text-gray-600">
+          <span class="text-2xl">🎮</span>
+          <p>Gamificación con XP, niveles y recompensas</p>
+        </div>
+      </div>
+
+      <!-- Divider -->
+      <div class="border-t border-gray-200 my-8"></div>
+
+      <!-- User Selection -->
+      <div>
+        <h3 class="text-xl font-bold text-gray-900 mb-4">Demo Interactivo</h3>
+        <p class="text-gray-600 mb-6">
+          Selecciona un perfil para experimentar la plataforma:
+        </p>
+        
+        <!-- User Cards Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="userCards">
+          <!-- User cards will be injected here -->
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Footer Info -->
+    <div class="text-center text-gray-500 text-sm">
+      <p>🚀 Prototipo Hackathon Demo</p>
+      <button 
+        onclick="GotchaApp.resetDemo()" 
+        class="mt-2 text-orange-600 hover:text-orange-700 underline focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 rounded px-2 py-1"
+      >
+        Reiniciar Demo
+      </button>
+    </div>
+
+  </div>
+
+  <!-- App Logic -->
+  <script src="app.js"></script>
+  
+  <!-- Page Logic -->
+  <script>
+    // Render user selection cards
+    function renderUserCards() {
+      const container = document.getElementById('userCards');
+      
+      GotchaApp.users.forEach(user => {
+        const card = document.createElement('div');
+        card.className = 'user-select-card bg-gradient-to-br from-gray-50 to-gray-100 p-5 rounded-xl border-2 border-gray-200 hover:border-yellow-400 cursor-pointer transition-all hover:shadow-lg hover:-translate-y-1';
+        card.onclick = () => selectUser(user);
+        
+        card.innerHTML = `
+          <div class="flex items-center space-x-4">
+            <div class="text-4xl">${user.photo}</div>
+            <div class="flex-1">
+              <h4 class="font-bold text-gray-900 text-lg">${user.name}</h4>
+              <p class="text-gray-600 text-sm">${user.occupation}</p>
+              <div class="flex items-center space-x-2 mt-2">
+                <span class="badge-level text-xs">Nivel ${user.level}</span>
+                <span class="text-xs text-gray-500">${GotchaApp.formatNumber(user.xp)} XP</span>
+              </div>
+            </div>
+          </div>
+        `;
+        
+        container.appendChild(card);
+      });
+    }
+
+    // Select user and navigate to dashboard
+    function selectUser(user) {
+      GotchaApp.saveCurrentUser(user);
+      GotchaApp.navigateTo('dashboard', user.id);
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      renderUserCards();
+    });
+  </script>
+
+</body>
+</html>
+

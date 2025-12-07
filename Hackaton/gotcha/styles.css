@@ -1,0 +1,491 @@
+/* ============================================
+   GOTCHA - Design System & Custom Styles
+   ============================================ */
+
+/* ============================================
+   CSS Variables (Design Tokens)
+   ============================================ */
+
+:root {
+  /* Primary Colors */
+  --gotcha-primary: #F4D03F;
+  --gotcha-primary-light: #F9E79F;
+  --gotcha-primary-dark: #F1C40F;
+  
+  /* Secondary Colors */
+  --gotcha-secondary: #F39C12;
+  --gotcha-secondary-light: #F8B739;
+  --gotcha-secondary-dark: #E67E22;
+  
+  /* Accent Colors */
+  --gotcha-accent-sage: #A8CDCD;
+  --gotcha-accent-peach: #FFA07A;
+  
+  /* Neutral Colors */
+  --gotcha-neutral-50: #FEFEFE;
+  --gotcha-neutral-100: #F8F9FA;
+  --gotcha-neutral-700: #495057;
+  --gotcha-neutral-900: #212529;
+  
+  /* Semantic Colors */
+  --gotcha-success: #48C774;
+  --gotcha-error: #FF6B6B;
+  
+  /* Shadows */
+  --gotcha-shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  --gotcha-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --gotcha-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  --gotcha-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  --gotcha-shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  --gotcha-shadow-yellow: 0 10px 30px -5px rgba(244, 208, 63, 0.3);
+  --gotcha-shadow-orange: 0 10px 30px -5px rgba(243, 156, 18, 0.3);
+  
+  /* Transitions */
+  --gotcha-duration-fast: 150ms;
+  --gotcha-duration-base: 300ms;
+  --gotcha-duration-slow: 500ms;
+  --gotcha-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --gotcha-ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --gotcha-ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* ============================================
+   Global Styles
+   ============================================ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============================================
+   Typography
+   ============================================ */
+
+.gotcha-logo {
+  background: linear-gradient(135deg, var(--gotcha-primary) 0%, var(--gotcha-secondary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.02em;
+}
+
+/* ============================================
+   Components
+   ============================================ */
+
+/* Cards */
+.card {
+  background: var(--gotcha-neutral-50);
+  transition: all var(--gotcha-duration-base) var(--gotcha-ease-in-out);
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--gotcha-shadow-xl);
+}
+
+/* Buttons */
+.btn-primary {
+  background: linear-gradient(135deg, var(--gotcha-primary) 0%, var(--gotcha-secondary) 100%);
+  color: var(--gotcha-neutral-900);
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  box-shadow: var(--gotcha-shadow-yellow);
+  transition: all var(--gotcha-duration-base) var(--gotcha-ease-in-out);
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--gotcha-shadow-lg);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-secondary {
+  background: var(--gotcha-neutral-50);
+  border: 2px solid var(--gotcha-primary);
+  color: var(--gotcha-neutral-900);
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  transition: all var(--gotcha-duration-base) var(--gotcha-ease-in-out);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.btn-secondary:hover {
+  background: var(--gotcha-primary-light);
+  border-color: var(--gotcha-secondary);
+}
+
+.btn-connection {
+  background: white;
+  color: var(--gotcha-secondary);
+  padding: 1rem 2rem;
+  border-radius: 1rem;
+  font-weight: 700;
+  font-size: 1.125rem;
+  box-shadow: var(--gotcha-shadow-2xl);
+  transition: all var(--gotcha-duration-base) var(--gotcha-ease-in-out);
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-connection:hover {
+  transform: scale(1.05);
+  box-shadow: var(--gotcha-shadow-2xl);
+}
+
+.btn-connection:active {
+  transform: scale(0.98);
+}
+
+/* Badges */
+.badge-level {
+  background: linear-gradient(135deg, var(--gotcha-secondary) 0%, var(--gotcha-primary) 100%);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  box-shadow: var(--gotcha-shadow-sm);
+}
+
+/* Progress Bar (XP) */
+.progress-xp {
+  background: #E9ECEF;
+  height: 8px;
+  border-radius: 9999px;
+  overflow: hidden;
+  width: 100%;
+}
+
+.progress-xp-fill {
+  background: linear-gradient(90deg, var(--gotcha-primary) 0%, var(--gotcha-secondary) 100%);
+  height: 100%;
+  transition: width var(--gotcha-duration-slow) var(--gotcha-ease-out);
+  border-radius: 9999px;
+  box-shadow: 0 0 10px rgba(244, 208, 63, 0.5);
+}
+
+/* Avatars */
+.avatar-large {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 4px solid var(--gotcha-primary);
+  box-shadow: var(--gotcha-shadow-yellow);
+  font-size: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  flex-shrink: 0;
+}
+
+.avatar-large-group {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  border: 6px solid rgba(255, 255, 255, 0.5);
+  box-shadow: var(--gotcha-shadow-2xl);
+  font-size: 5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  animation: avatarPulse 2s ease-in-out infinite;
+}
+
+@keyframes avatarPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* User Select Cards */
+.user-select-card {
+  transition: all var(--gotcha-duration-base) var(--gotcha-ease-in-out);
+}
+
+.user-select-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--gotcha-primary);
+  box-shadow: var(--gotcha-shadow-yellow);
+}
+
+.user-select-card:active {
+  transform: translateY(-2px);
+}
+
+/* ============================================
+   Modal
+   ============================================ */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 1300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  opacity: 0;
+  transition: opacity var(--gotcha-duration-base) var(--gotcha-ease-in-out);
+  pointer-events: none;
+}
+
+.modal-overlay.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-content {
+  background: var(--gotcha-neutral-50);
+  border-radius: 1.5rem;
+  padding: 2rem;
+  max-width: 550px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: var(--gotcha-shadow-2xl);
+  animation: modalSlideUp var(--gotcha-duration-base) var(--gotcha-ease-out);
+}
+
+/* Custom scrollbar for modal */
+.modal-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+  background: var(--gotcha-neutral-100);
+  border-radius: 10px;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+  background: var(--gotcha-primary);
+  border-radius: 10px;
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+  background: var(--gotcha-secondary);
+}
+
+@keyframes modalSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================
+   Group Screen
+   ============================================ */
+
+.group-screen {
+  min-height: 100vh;
+  transition: background var(--gotcha-duration-base) var(--gotcha-ease-in-out);
+}
+
+/* ============================================
+   Animations
+   ============================================ */
+
+@keyframes levelUp {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2) rotate(5deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+.level-up-badge {
+  animation: levelUp var(--gotcha-duration-slow) var(--gotcha-ease-bounce);
+}
+
+@keyframes xpPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+}
+
+.xp-gain-indicator {
+  animation: xpPulse var(--gotcha-duration-base) var(--gotcha-ease-in-out) 3;
+}
+
+@keyframes xpBounce {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+#xpGained {
+  animation: xpBounce 0.6s var(--gotcha-ease-bounce);
+}
+
+@keyframes slideInFromTop {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.benefit-item {
+  animation: slideInFromTop 0.4s var(--gotcha-ease-out);
+}
+
+.benefit-item:nth-child(1) { animation-delay: 0.1s; opacity: 0; animation-fill-mode: forwards; }
+.benefit-item:nth-child(2) { animation-delay: 0.2s; opacity: 0; animation-fill-mode: forwards; }
+.benefit-item:nth-child(3) { animation-delay: 0.3s; opacity: 0; animation-fill-mode: forwards; }
+
+/* ============================================
+   Responsive Design
+   ============================================ */
+
+@media (max-width: 640px) {
+  .avatar-large {
+    width: 100px;
+    height: 100px;
+    font-size: 3rem;
+  }
+  
+  .avatar-large-group {
+    width: 140px;
+    height: 140px;
+    font-size: 4rem;
+  }
+  
+  .modal-content {
+    padding: 1.25rem;
+    max-height: 95vh;
+  }
+  
+  #xpGained {
+    font-size: 2.5rem;
+  }
+  
+  .modal-content h2 {
+    font-size: 1.75rem;
+  }
+}
+
+/* ============================================
+   Accessibility
+   ============================================ */
+
+/* Focus States */
+*:focus-visible {
+  outline: 3px solid var(--gotcha-primary);
+  outline-offset: 2px;
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  .btn-primary,
+  .btn-secondary {
+    border: 2px solid currentColor;
+  }
+}
+
+/* ============================================
+   Utilities
+   ============================================ */
+
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+/* Hide scrollbar but keep functionality */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Smooth scroll */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Selection color */
+::selection {
+  background: var(--gotcha-primary-light);
+  color: var(--gotcha-neutral-900);
+}
+
+::-moz-selection {
+  background: var(--gotcha-primary-light);
+  color: var(--gotcha-neutral-900);
+}
+
